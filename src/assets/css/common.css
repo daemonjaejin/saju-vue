@@ -1,0 +1,726 @@
+/* 1. 디자인 시스템 변수 정의 */
+:root {
+  /* Colors */
+  --primary-color: #00c2ff; /* 메인 하늘색 (슬라이더/등록) */
+  --primary-hover: #00a8dd;
+  --secondary-color: #007bff; /* 파란색 (검색/조회/모달저장) */
+  --secondary-hover: #0056b3;
+  --error-color: #ff4d4f; /* 에러 빨간색 */
+  --error-bg: #fff2f0;
+  --border-color: #e2e8f0;
+  --input-border: #cbd5e0;
+  --bg-readonly: #f1f3f5;
+  --label-color: #4a5568;
+
+  /* Dimensions */
+  --input-height: 38px; /* 모든 입력창/버튼 높이 통일 */
+  --gap-large: 24px; /* 폼 항목 간격 */
+  --gap-base: 15px; /* 검색바/모달 항목 간격 */
+  --gap-small: 8px; /* 라벨-입력창 간격 */
+}
+
+/* 2. 전역 리셋 및 초기화 */
+* {
+  box-sizing: border-box; /* 패딩이 높이에 영향을 주지 않도록 설정 */
+}
+
+/* 3. 검색 영역 스타일 (Search Container) */
+.search-container {
+  background-color: #ffffff;
+  padding: 15px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.search-row {
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--label-color);
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+/* 4. 입력창 공통 스타일 (Input, Select, BaseSelect) */
+input[type="text"],
+input[type="number"],
+select,
+.custom-select {
+  height: var(--input-height);
+  padding: 0 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  transition: all 0.2s;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+.custom-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.1);
+}
+
+.readonly-input {
+  background-color: var(--bg-readonly);
+  color: #868e96;
+  cursor: not-allowed;
+}
+
+/* 5. 폼 레이아웃 (Slider/Modal 내부) */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-large);
+  padding: 10px 5px;
+}
+
+.form-item,
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-small);
+}
+
+.form-item label,
+.form-group label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+}
+
+/* 필수 표시 (*) */
+.required::after {
+  content: "*";
+  color: var(--error-color);
+  margin-left: 4px;
+}
+
+/* 6. 버튼 시스템 */
+.button-group {
+  margin-left: auto; /* 우측 정렬 유지 */
+  display: flex;
+  align-items: center;
+  gap: var(--gap-small);
+}
+
+[class^="btn-"] {
+  height: var(--input-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+/* 삭제 버튼 스타일 */
+.btn-delete {
+  background-color: var(--error-color); /* #ff4d4f */
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #ff7875; /* 에러 컬러보다 살짝 밝은 레드 */
+}
+
+/* 아이콘과 텍스트 간격 (폰트어썸 사용 시) */
+.btn-delete i {
+  margin-right: 6px;
+}
+.btn-insert,
+.btn-save {
+  background-color: var(--primary-color);
+  color: white;
+}
+.btn-search {
+  background-color: var(--secondary-color);
+  color: white;
+}
+.btn-reset,
+.btn-cancel {
+  background-color: #edf2f7;
+  color: #4a5568;
+  border: 1px solid var(--input-border);
+}
+
+.btn-insert:hover {
+  background-color: var(--primary-hover);
+}
+.btn-search:hover {
+  background-color: var(--secondary-hover);
+}
+.btn-reset:hover {
+  background-color: #e2e8f0;
+}
+
+/* 7. 에러 처리 스타일 (Zod Validation) */
+.error-text {
+  color: var(--error-color);
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.error-border {
+  border: 1.5px solid var(--error-color) !important;
+  background-color: var(--error-bg) !important;
+}
+
+.error-border:focus {
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1) !important;
+}
+
+/* 8. 모달 & 슬라이더(Drawer) 공통 구조 */
+.drawer-overlay,
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  display: flex;
+}
+
+.drawer-overlay {
+  justify-content: flex-end;
+}
+.modal-overlay {
+  justify-content: center;
+  align-items: center;
+}
+
+.drawer-content,
+.modal-content {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.drawer-content {
+  width: 900px;
+  height: 100%;
+}
+.modal-content {
+  width: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+  animation: modal-show 0.3s ease-out;
+}
+
+.drawer-header,
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-body,
+.modal-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.drawer-footer,
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* 애니메이션 */
+@keyframes modal-show {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease-out;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* 9. Select 화살표 커스텀 */
+.custom-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+/* 10. Element Plus DatePicker 디자인 시스템 통합 */
+
+/* 전체적인 높이와 보더 라운드 통일 */
+.el-date-editor.el-input {
+  --el-input-height: var(--input-height); /* 38px로 통일 */
+  width: 180px; /* 적절한 너비 설정 */
+}
+
+/* 내부 래퍼 스타일 조정 (common.css의 input 스타일 복제) */
+.el-input__wrapper {
+  height: var(--input-height) !important;
+  border: 1px solid var(--input-border) !important;
+  box-shadow: none !important; /* 기본 파란색 그림자 제거 */
+  border-radius: 4px !important;
+  padding: 0 12px !important;
+}
+
+/* 포커스 되었을 때 (primary-color 적용) */
+.el-input__wrapper.is-focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.1) !important;
+}
+
+/* 아이콘 색상 조정 */
+.el-input__icon {
+  color: var(--label-color);
+}
+
+/* 검색바 내부에서의 정렬 */
+.search-group .el-date-editor {
+  margin: 0;
+  vertical-align: middle;
+}
+
+/* 달력 내부의 파란색 포인트를 프로젝트 하늘색으로 변경 */
+.el-datepicker__header-label:hover,
+.el-date-table td.today .el-date-table-cell__text,
+.el-date-table td.available:hover {
+  color: var(--primary-color) !important;
+}
+
+.el-date-table td.current:not(.disabled) .el-date-table-cell__text {
+  background-color: var(--primary-color) !important;
+}
+
+.menu-management-wrapper {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 100px);
+}
+
+.left-panel {
+  flex: 2;
+  min-width: 600px;
+}
+
+.right-panel {
+  flex: 1;
+  min-width: 350px;
+}
+
+.form-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between; /* 타이틀과 버튼 그룹을 양 끝으로 */
+  align-items: center;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 8px; /* 삭제와 취소 버튼 사이의 간격 */
+}
+
+.dashboard-container {
+  padding: 20px;
+}
+.chart-box {
+  height: 400px; /* 차트 높이 지정 필수 */
+}
+
+.kanban-wrapper {
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 100px);
+}
+
+.kanban-column {
+  background-color: #ebedf0;
+  border-radius: 8px;
+  padding: 15px;
+  min-height: 500px;
+}
+
+.column-title {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drag-area {
+  min-height: 450px;
+}
+
+.task-card {
+  margin-bottom: 10px;
+  cursor: grab;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+/* 드래그 중인 카드의 투명도 조절 */
+.ghost-card {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+
+.upload-container {
+  padding: 10px;
+}
+.progress-wrapper {
+  margin-top: 15px;
+}
+.preview-img {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.timeline-container {
+  padding: 20px 10px;
+}
+
+.timeline-content-card h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.user-info {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #909399;
+}
+
+/* 타임라인 카드 커스텀 디자인 */
+:deep(.el-card__body) {
+  padding: 12px 15px;
+}
+
+.roadmap-wrapper {
+  overflow-x: auto;
+  border: 1px solid #ebeef5;
+}
+
+.timeline-grid-header {
+  display: flex;
+  background: #f5f7fa;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.grid-col-header {
+  min-width: 100px;
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 12px;
+  border-right: 1px solid #ebeef5;
+}
+
+.timeline-body {
+  position: relative;
+  min-height: 400px;
+}
+
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+}
+
+.grid-line {
+  flex: 1;
+  border-right: 1px solid #f0f0f0;
+}
+
+.task-rows {
+  position: relative;
+  padding: 20px 0;
+}
+
+.task-row {
+  height: 50px;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.task-bar {
+  position: absolute;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  padding: 0 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.task-bar:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.95);
+}
+
+/* 헬퍼 텍스트 및 배지 */
+.mb-10 {
+  margin-bottom: 10px;
+}
+.helper-text {
+  font-size: 13px;
+  color: #718096;
+  margin-bottom: 12px;
+}
+.badge-info {
+  background-color: #ebf8ff;
+  color: #3182ce;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* 6. 칩 필터 커스텀 */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  height: 32px;
+  padding: 0 15px;
+  border-radius: 16px;
+  border: 1px solid var(--input-border);
+  background-color: #fff;
+  font-size: 13px;
+  color: var(--label-color);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-chip.active {
+  background-color: #e6f7ff;
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+/* 7. 태그 입력창 커스텀 (올려주신 input 스타일 계승) */
+.tag-input-wrapper {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: #fff;
+  min-height: var(--input-height);
+}
+
+.tag-input-wrapper:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.1);
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-readonly);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 13px;
+  color: var(--label-color);
+}
+
+.tag-remove {
+  margin-left: 6px;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.tag-remove:hover {
+  color: var(--error-color);
+}
+
+.tag-inner-input {
+  border: none !important;
+  outline: none !important;
+  flex: 1;
+  min-width: 100px;
+  height: 30px !important;
+  padding: 0 !important;
+}
+
+/* 너비 정의 */
+.w-150 {
+  width: 150px;
+}
+.w-200 {
+  width: 200px;
+}
+
+/* 엔터프라이즈 배지 스타일 */
+.badge-enterprise {
+  background-color: #e2e8f0;
+  color: #4a5568;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* 검색창 내부 아이콘 포함 인풋 */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon .icon-search {
+  position: absolute;
+  left: 10px;
+  font-size: 14px;
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+.input-with-icon input {
+  padding-left: 32px !important; /* 아이콘 공간 확보 */
+}
+
+/* 셀렉트 박스 비활성화 시 커서 변경 */
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* 메인 버튼 스타일 */
+.dropdown-trigger {
+  height: var(--input-height);
+  min-width: 320px;
+  padding: 0 15px;
+  background: #fff;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--label-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 공통 메뉴 스타일 */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 180px;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  padding: 5px 0;
+  margin: 0;
+}
+
+/* 서브 메뉴 위치 (옆으로 나옴) */
+.sub-menu {
+  top: -6px; /* 부모 아이템과 높이 맞춤 */
+  left: 100%; /* 부모의 오른쪽 끝에서 시작 */
+}
+
+/* 개별 아이템 스타일 */
+.menu-item {
+  padding: 10px 15px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.menu-item:hover {
+  background-color: #f0f7ff;
+  color: var(--secondary-color);
+}
+
+.next-arrow {
+  font-size: 10px;
+  color: #ccc;
+}
+
+.last-item:hover {
+  font-weight: bold;
+}

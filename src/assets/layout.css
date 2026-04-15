@@ -1,0 +1,204 @@
+/* 1. 브라우저가 강제로 주는 여백 제거 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 2. Vite 기본 템플릿의 '중앙 정렬'과 '최대 너비' 박살내기 */
+#app {
+  margin: 0;
+  padding: 0;
+  max-width: none; /* 1280px 제한 해제 */
+  width: 100%;
+  height: 100%;
+  text-align: left; /* 중앙 정렬 해제 */
+}
+
+/* 1단계에서 했던 리셋 (유지) */
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 2단계: 가로 분할 설정 */
+.saju-admin-wrapper {
+  display: flex; /* 자식들을 가로로 나열 */
+  width: 100vw; /* 브라우저 가로폭 100% 사용 */
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* 좌측 사이드바 영역 */
+.saju-sidebar {
+  width: 260px; /* 가로폭 고정 */
+  min-width: 260px;
+  background-color: #1e293b; /* 사이드바 배경색 */
+  height: 100%;
+}
+
+/* 우측 컨텐츠 영역 */
+.saju-container {
+  flex: 1; /* 남은 공간 모두 차지 */
+  display: flex;
+  flex-direction: column; /* 내부 요소(헤더, 본문)를 세로로 배치 */
+  background-color: #f1f5f9; /* 본문 배경색 (연한 회색) */
+}
+
+/* 사이드바 내부 로고 */
+.sidebar-logo {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  color: #38bdf8;
+  font-weight: bold;
+  font-size: 1.1rem;
+  background-color: #0f172a; /* 로고 영역만 조금 더 어둡게 */
+}
+
+/* 사이드바 메뉴 리스트 */
+.sidebar-nav ul {
+  list-style: none; /* 점 제거 */
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  padding: 16px 24px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+/* 마우스 올렸을 때 */
+.sidebar-nav li:hover {
+  background-color: #334155;
+  color: #fff;
+}
+
+/* 활성화된 메뉴 */
+.sidebar-nav li.active {
+  background-color: #38bdf8;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 상단 헤더 전체 */
+.saju-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* 헤더 윗줄 (경로 및 사용자 정보) */
+.header-top {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-logout {
+  padding: 2px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background-color: #f8fafc;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+/* 헤더 아랫줄 (탭 영역) */
+.header-tabs {
+  display: flex;
+  padding: 0 10px;
+  gap: 4px;
+  background-color: #f8fafc;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #e2e8f0;
+  border-radius: 6px 6px 0 0;
+  font-size: 0.8rem;
+  color: #475569;
+  cursor: pointer;
+  margin-top: 6px; /* 탭이 바닥에 붙어 보이게 상단 여백 */
+  transition: all 0.2s;
+}
+
+/* 활성화된 탭 */
+.tab-item.active {
+  background-color: #ffffff;
+  color: #38bdf8;
+  font-weight: bold;
+  border: 1px solid #e2e8f0;
+  border-bottom-color: #ffffff; /* 하단 선을 가려서 본문과 이어지게 함 */
+  margin-bottom: -1px; /* 선 겹치기 기술 */
+}
+
+.icon-close {
+  font-style: normal;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.icon-close:hover {
+  color: #ef4444;
+}
+
+/* 중앙 본문 전체 영역 */
+.saju-main {
+  flex: 1; /* 남은 세로 공간 모두 차지 */
+  padding: 20px; /* 상하좌우 여백 */
+  overflow-y: auto; /* 내용이 길어지면 본문만 스크롤 */
+  display: flex; /* 카드 박스가 꽉 차게 하기 위함 */
+}
+
+/* 실제 데이터가 들어가는 흰색 카드 */
+.content-card {
+  flex: 1; /* 가로/세로 꽉 채우기 */
+  background-color: #ffffff;
+  border-radius: 8px; /* 모서리 곡선 */
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 카드 내부 점선 박스 (임시 가이드) */
+.placeholder-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #e2e8f0;
+  border-radius: 8px;
+  color: #94a3b8;
+}
+
+.placeholder-view h3 {
+  margin-bottom: 8px;
+  color: #64748b;
+}

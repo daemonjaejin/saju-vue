@@ -6,9 +6,11 @@ import "@/assets/css/common.css"; // 공통 스타일 불러오기
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
-import _ from 'lodash' // lodash 불러오기
+import _ from "lodash"; // lodash 불러오기
+import { searchEnter } from "@/directives/searchEnter";
 
 const app = createApp(App);
+app.directive("search-enter", searchEnter);
 
 app.use(ElementPlus);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

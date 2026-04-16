@@ -1,6 +1,5 @@
-<
 <template>
-  <div class="search-container">
+  <div class="search-container" v-search-enter="fetchData">
     <div class="search-row">
       <div class="search-group">
         <label for="groupCode">그룹코드</label>

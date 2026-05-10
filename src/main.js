@@ -8,10 +8,12 @@ import "element-plus/dist/index.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import _ from "lodash"; // lodash 불러오기
 import { searchEnter } from "@/directives/searchEnter";
+import { createPinia } from "pinia";
 
 const app = createApp(App);
 app.directive("search-enter", searchEnter);
 
+app.use(createPinia());
 app.use(ElementPlus);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);

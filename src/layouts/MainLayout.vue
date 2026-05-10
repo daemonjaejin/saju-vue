@@ -47,7 +47,9 @@
       <header class="saju-header">
         <div class="header-top">
           <span>Home > {{ $route.meta.title }}</span>
-          <div class="user">관리자님 <button>로그아웃</button></div>
+          <div class="user">
+            관리자님 <button @click="logout">로그아웃</button>
+          </div>
         </div>
         <div class="header-tabs">
           <div class="tab-item active">
@@ -67,4 +69,14 @@
 
 <script setup>
 import "@/assets/layout.css";
+
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  router.push("/login");
+};
 </script>

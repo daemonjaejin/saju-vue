@@ -32,7 +32,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_API_URL: https://d1n2lcd3oi7nqe.cloudfront.net
+          VITE_API_URL: https://d1n2lcd3oi7nqe.cloudfront.net/api
 
       # 5단계: AWS 자격증명 설정
       - name: Configure AWS credentials

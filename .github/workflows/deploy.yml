@@ -25,7 +25,8 @@ jobs:
 
       # 3단계: 패키지 설치
       - name: Install dependencies
-        run: npm ci
+        # run:
+        run: npm ci --legacy-peer-deps # ← 이 옵션 추가!
 
       # 4단계: 프로덕션 빌드
       - name: Build

@@ -5,7 +5,7 @@ name: Vue Deploy to S3 + CloudFront
 on:
   push:
     branches:
-      - master   # saju-vue 브랜치명 확인! main이면 main으로 변경
+      - main # saju-vue 브랜치명 확인! main이면 main으로 변경
 
 jobs:
   deploy:
@@ -20,8 +20,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       # 3단계: 패키지 설치
       - name: Install dependencies
@@ -48,7 +48,7 @@ jobs:
             --delete \
             --cache-control "max-age=31536000,public" \
             --exclude "index.html"
-          
+
           aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
             --cache-control "no-cache,no-store,must-revalidate"
 
